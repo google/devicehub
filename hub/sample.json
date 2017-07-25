@@ -1,0 +1,16 @@
+[
+    {
+        "name" : "sample",
+        "AndroidDevice": [
+            {
+                "serial": "8XV0115704000536",
+                "label": "broadcaster"
+            },
+            {
+                "serial": "HT7320200639",
+                "label": "receiver"
+            }
+        ]
+    }
+]
+

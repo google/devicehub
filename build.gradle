@@ -1,0 +1,10 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+}

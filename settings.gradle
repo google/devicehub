@@ -1,0 +1,12 @@
+rootProject.name = 'devicehub'
+include ":devicehub-client"
+include ":devicehub-device"
+include ":devicehub-examples"
+include ":devicehub-hub"
+include ":devicehub-proto"
+
+project(':devicehub-client').projectDir = "$rootDir/client" as File
+project(':devicehub-device').projectDir = "$rootDir/device" as File
+project(':devicehub-examples').projectDir = "$rootDir/examples" as File
+project(':devicehub-hub').projectDir = "$rootDir/hub" as File
+project(':devicehub-proto').projectDir = "$rootDir/proto" as File
