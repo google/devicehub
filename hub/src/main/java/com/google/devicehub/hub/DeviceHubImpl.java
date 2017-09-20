@@ -23,7 +23,9 @@ import com.google.devicehub.proto.DeviceHubGrpc;
 import com.google.devicehub.proto.DeviceRequest;
 import com.google.devicehub.proto.DeviceRequestStatusEnum;
 import com.google.devicehub.proto.DeviceResponse;
+import com.google.wireless.qa.devicehub.proto.DeviceType;
 import com.google.devicehub.proto.DeviceTypeEnum;
+import com.google.wireless.qa.devicehub.proto.Devices;
 import com.google.devicehub.proto.SmartDeviceMessage;
 import com.google.devicehub.proto.SmartDeviceRequest;
 import io.grpc.stub.StreamObserver;
@@ -193,6 +195,21 @@ public class DeviceHubImpl extends DeviceHubGrpc.DeviceHubImplBase {
         requestQueueMap.setQueue(null);
       }
     };
+  }
+
+  @Override
+  public void getDevices(DeviceType deviceType, StreamObserver<Devices> responseObserver) {
+    logger.info("Finding devices for type: " + deviceType.getType());
+    Map<DeviceTypeEnum, ImmutableList<Device>> deviceMap = contextProvider.getDeviceMap();
+    Devices.Builder devicesBuilder = Devices.newBuilder();
+    if (deviceMap != null) {
+      List<Device> devices = deviceMap.get(deviceType.getType());
+      if (devices != null && !devices.isEmpty()) {
+        devicesBuilder.addAllDevice(devices);
+      }
+    }
+    responseObserver.onNext(devicesBuilder.build());
+    responseObserver.onCompleted();
   }
 
   public void shutdown() {

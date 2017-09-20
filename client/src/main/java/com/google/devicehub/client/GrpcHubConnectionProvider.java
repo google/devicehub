@@ -17,6 +17,8 @@ package com.google.devicehub.client;
 import com.google.devicehub.proto.DeviceHubGrpc;
 import com.google.devicehub.proto.DeviceRequest;
 import com.google.devicehub.proto.DeviceResponse;
+import com.google.devicehub.proto.DeviceType;
+import com.google.devicehub.proto.Devices;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
@@ -34,5 +36,10 @@ public class GrpcHubConnectionProvider implements HubConnectionProvider {
   @Override
   public DeviceResponse sendDeviceRequest(ManagedChannel channel, DeviceRequest request) {
     return DeviceHubGrpc.newBlockingStub(channel).sendDeviceRequest(request);
+  }
+
+  @Override
+  public Devices getDevices(ManagedChannel channel, DeviceType deviceType) {
+    return DeviceHubGrpc.newBlockingStub(channel).getDevices(deviceType);
   }
 }

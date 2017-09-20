@@ -27,6 +27,10 @@ service DeviceHub {
   rpc SendDeviceRequest(DeviceRequest) returns (DeviceResponse) {
   }
 
+  // Get the devices of the given type
+  rpc GetDevices(DeviceType) returns (Devices) {
+  }
+
   // Register a device so that it can receive custom code requests, this is
   // for Android only for now
   rpc RegisterDevice(stream SmartDeviceMessage)
@@ -44,6 +48,16 @@ enum DeviceTypeEnum {
   WEB_CAM = 5;
   GENERIC_SCRIPT = 6;
   CHAMELEON_DEVICE = 7;
+}
+
+// The device type
+message DeviceType {
+  DeviceTypeEnum type = 1;
+}
+
+// A list of devices
+message Devices {
+  repeated Device device = 1;
 }
 
 // The device

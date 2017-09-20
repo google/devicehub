@@ -17,10 +17,14 @@ package com.google.devicehub.client;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.ByteString;
 import com.google.devicehub.proto.CustomCodeEndpoint;
+import com.google.devicehub.proto.Device;
 import com.google.devicehub.proto.DeviceRequest;
 import com.google.devicehub.proto.DeviceResponse;
+import com.google.devicehub.proto.DeviceType;
+import com.google.devicehub.proto.DeviceTypeEnum;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -113,5 +117,36 @@ public class DeviceHubClient {
             return sendDeviceRequest(clientDeviceRequest);
           }
         });
+  }
+
+  /**
+   * Get the devices that are part of the testbed for the given type
+   *
+   * @param deviceType the given type to get the devices for
+   * @return the devices of the given type
+   */
+  public List<Device> getDevices(DeviceTypeEnum deviceType) {
+    ManagedChannel channel = null;
+    try {
+      // The gRPC channel used to communicate with the server
+      channel = hubConnectionProvider.getManagedChannel(DEFAULT_HOST, hubPort);
+      logger.info("Getting device for: " + deviceType);
+      List<Device> devices =
+          hubConnectionProvider
+              .getDevices(channel, DeviceType.newBuilder().setType(deviceType).build())
+              .getDeviceList();
+      logger.info("Received devices: " + (devices == null ? null : devices.size()));
+
+      return devices;
+    } catch (StatusRuntimeException e) {
+      logger.log(Level.WARNING, "Failed to get devices: ", e);
+      throw e;
+    } finally {
+      try {
+        channel.shutdown().awaitTermination(SHUTDOWN_WAIT_SECS, TimeUnit.SECONDS);
+      } catch (InterruptedException e) {
+        logger.log(Level.WARNING, "Failed to shut down the communication channel: ", e);
+      }
+    }
   }
 }

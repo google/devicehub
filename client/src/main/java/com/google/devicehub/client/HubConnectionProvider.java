@@ -16,6 +16,8 @@ package com.google.devicehub.client;
 
 import com.google.devicehub.proto.DeviceRequest;
 import com.google.devicehub.proto.DeviceResponse;
+import com.google.devicehub.proto.DeviceType;
+import com.google.devicehub.proto.Devices;
 import io.grpc.ManagedChannel;
 
 /**
@@ -26,4 +28,6 @@ public interface HubConnectionProvider {
   ManagedChannel getManagedChannel(String host, int port);
 
   DeviceResponse sendDeviceRequest(ManagedChannel channel, DeviceRequest request);
+
+  Devices getDevices(ManagedChannel channel, DeviceType deviceType);
 }
